@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
-import { Link,useNavigate } from 'react-router-dom'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 //third-party
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import axios from "axios"
+import axios from 'axios'
 
 //images
 import Logo from '../assets/logo.svg'
@@ -26,20 +26,25 @@ const Register = () => {
     draggable: true,
     theme: 'dark',
   }
-  const handleSubmit = async(e) => {
+  useEffect(() => {
+    if (localStorage.getItem('chat-app-user')) {
+      navigate('/')
+    }
+  }, [])
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if(handleValidation()){
-      const {username,email,password} = values
-      const {data} = await axios.post(registerRoute,{
+    if (handleValidation()) {
+      const { username, email, password } = values
+      const { data } = await axios.post(registerRoute, {
         username,
         email,
-        password
+        password,
       })
-      if(data.status===false){
-        toast.error(data.msg,toastOptions)
-      }else{
-        localStorage.setItem("chat-app-user",JSON.stringify(data.user))
-        navigate("/")
+      if (data.status === false) {
+        toast.error(data.msg, toastOptions)
+      } else {
+        localStorage.setItem('chat-app-user', JSON.stringify(data.user))
+        navigate('/')
       }
     }
   }
